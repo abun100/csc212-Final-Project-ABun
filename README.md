@@ -1,11 +1,10 @@
 # csc212-Final-Project-ABun
 ## Convex hull initial plan
 ```
-We could use this color picker concept to map out stuff and make stuff easier to see
+We could use color picker concept to map out convex hull
 make a simpler map given a real life google maps
-Background remover
-Simply just select outside border based on color 
-Map out a template or format
+Select the borders of main features in a map (ex. house, streets, highways)
+ignore noise in pictures (random objects, like cars, people, and envirnment)
 ```
 
 ## Psuedocode
