@@ -38,6 +38,52 @@ ignore noise in pictures (random objects, like cars, people, and envirnment)
 
 
 ## What each part in the convex hull function does
+
+### ReadFile() function
+```
+void ReadFile(std::string file_name, std::vector<Point>& points, int numLines) {
+	//makes the top left of the image act as the 2nd quadrant in a grid 
+	int y = (std::floor((double)numLines / 2));
+	
+	// Opens the file for reading
+	std::ifstream file(file_name);
+
+	// Creates a string to hold each line in temporarily
+	std::string str;
+
+	// Iterates over the file, storing one line at a time into `str`
+	while (std::getline(file, str)) {
+		//start is the top left most value in the 2nd quadrant
+		//end is the last value in the 1st quadrant
+		int start = -(std::floor((double)str.length() / 2));
+		int end = (std::floor((double)str.length() / 2));
+		int s = 0;
+
+		//makes the image text file act like a grid of quadrants
+		//if the image is even x even, then it skips the axis
+		for (int i = start; i <= end; i++) {
+			if (i == 0 && str.size() % 2 == 0) {
+				continue;
+			}
+			if (y == 0 && numLines % 2 == 0) {
+				y--;
+			}	
+			Point temp(i, y, (str[s] - '0'));
+			points.push_back(temp);
+			s++;
+		}
+
+		y--;
+	}
+}
+```
+Takes the values from the image and creates a vector of "Points" and assebles the points like a grid
+
+![image](https://user-images.githubusercontent.com/114605559/203661205-a51b0ca2-5d7d-4be7-bfd3-ddca8f4cd599.png)
+
+
+### Choose the bottom most point
+
 ```
 // Find the bottommost point of the black set of points
 	int ymin = points[0].y, min = 0;
@@ -64,6 +110,8 @@ in a set of points choose the bottom most point. In the example below, it choose
 
 011111
 
+### Sort the vector of "Points"
+
 ```
 // Place the bottom-most point at first position
 swap(points[0], points[min]);
@@ -89,3 +137,65 @@ set p0 (intital points we want to compare every other point to by polar angle)
 places p0 at the start of a temp vector and the black points vector
 
 sorts the rest of the points based on polar angle
+
+![image](https://user-images.githubusercontent.com/114605559/203659957-bcc8b650-3b90-41f7-afe0-478c7fff6eb3.png)
+
+### Remove points that are in a line, execpt for the furthest point
+
+```
+for (int i = 1; i < temp.size(); i++)
+{
+	// Keep removing i while angle of i and i+1 is same
+	// with respect to p0
+	while ((i < temp.size() - 1 && orientation(p0, temp[i],
+		temp[i + 1]) == 0))
+		i++;
+
+	black_points.push_back(temp[i]);
+}
+```
+
+If two points happen to on the same line from the p0. Then we just add the furthest point to the black_points vector.
+
+The black_points vector only contains pixels that are black 
+
+Ex. In the image below, our code will skip p2, and add p3 to the black_points vector
+
+![image](https://user-images.githubusercontent.com/114605559/203660490-73927f36-ab4c-4d72-8d5e-b41eb0d431fe.png)
+
+
+### Determine orientation and Print convex hull
+
+```
+if (black_points.size() < 3) return;
+
+// Create an empty stack and push first three points
+// to it.
+stack<Point> S;
+S.push(black_points[0]);
+S.push(black_points[1]);
+S.push(black_points[2]);
+
+// Process remaining n-3 points
+for (int i = 3; i < black_points.size(); i++)
+{
+	// Keep removing top while the angle formed by
+	// points next-to-top, top, and points[i] makes
+	// a non-left turn
+	while (S.size() > 1 && orientation(nextToTop(S), S.top(), black_points[i]) != 2)
+		S.pop();
+	S.push(black_points[i]);
+}
+
+// Now stack has the output points, print contents of stack
+while (!S.empty())
+{
+	Point p = S.top();
+	cout << p.x << ";" << p.y << endl;
+	S.pop();
+}
+```
+
+Depending on the orientation of the points, either add them or remove them from stack
+
+Basically, this is the driving code that outlines our convex hull.
