@@ -89,6 +89,7 @@ int compare(const void* vp1, const void* vp2)
 void convexHull(std::vector<Point> &points)
 {
 	std::vector<Point> temp;
+	std::vector<Point> black_points;
 	// Find the bottommost point
 	int ymin = points[0].y, min = 0;
 	for (int i = 1; i < points.size(); i++)
@@ -112,54 +113,49 @@ swap(points[0], points[min]);
 // direction) than p1
 p0 = points[0];
 temp.push_back(points[0]);
+black_points.push_back(points[0]);
 qsort(&points[1], points.size() - 1, sizeof(Point), compare);
-
+for (auto& elem : points) {
+	if (elem.color == 1) { continue; }
+	temp.push_back(elem);
+}
 // If two or more points make same angle with p0,
 // Remove all but the one that is farthest from p0
 // Remember that, in above sorting, our criteria was
 // to keep the farthest point at the end when more than
 // one points have same angle.
 
-for (int i = 1; i < points.size(); i++)
+for (int i = 1; i < temp.size(); i++)
 {
 	// Keep removing i while angle of i and i+1 is same
 	// with respect to p0
-	while ((i < points.size() - 1 && orientation(p0, points[i],
-		points[i + 1]) == 0))
+	while ((i < temp.size() - 1 && orientation(p0, temp[i],
+		temp[i + 1]) == 0))
 		i++;
 
-	if (points[i].color == 1) {
-		continue;
-	}
-
-	temp.push_back(points[i]);
-
-}
-
-for (auto& elem : temp) {
-	std::cout << elem.x << ":" << elem.y << ":" << elem.color << std::endl;
+	black_points.push_back(temp[i]);
 }
 
 // If modified array of points has less than 3 points,
 // convex hull is not possible
-if (temp.size() < 3) return;
+if (black_points.size() < 3) return;
 
 // Create an empty stack and push first three points
 // to it.
 stack<Point> S;
-S.push(points[0]);
-S.push(points[1]);
-S.push(points[2]);
+S.push(black_points[0]);
+S.push(black_points[1]);
+S.push(black_points[2]);
 
 // Process remaining n-3 points
-for (int i = 3; i < temp.size(); i++)
+for (int i = 3; i < black_points.size(); i++)
 {
 	// Keep removing top while the angle formed by
 	// points next-to-top, top, and points[i] makes
 	// a non-left turn
-	while (S.size() > 1 && orientation(nextToTop(S), S.top(), points[i]) != 2)
+	while (S.size() > 1 && orientation(nextToTop(S), S.top(), black_points[i]) != 2)
 		S.pop();
-	S.push(points[i]);
+	S.push(black_points[i]);
 }
 
 // Now stack has the output points, print contents of stack
@@ -230,6 +226,5 @@ int main(int argc, char* argv[])
 	
 	convexHull(p);
 	
-	std::cout << p0.x << p0.y << std::endl;
 	return 0;
 }
