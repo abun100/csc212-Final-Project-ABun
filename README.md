@@ -39,49 +39,6 @@ ignore noise in pictures (random objects, like cars, people, and envirnment)
 
 ## What each part in the convex hull function does
 
-### ReadFile() function
-```
-void ReadFile(std::string file_name, std::vector<Point>& points, int numLines) {
-	//makes the top left of the image act as the 2nd quadrant in a grid 
-	int y = (std::floor((double)numLines / 2));
-	
-	// Opens the file for reading
-	std::ifstream file(file_name);
-
-	// Creates a string to hold each line in temporarily
-	std::string str;
-
-	// Iterates over the file, storing one line at a time into `str`
-	while (std::getline(file, str)) {
-		//start is the top left most value in the 2nd quadrant
-		//end is the last value in the 1st quadrant
-		int start = -(std::floor((double)str.length() / 2));
-		int end = (std::floor((double)str.length() / 2));
-		int s = 0;
-
-		//makes the image text file act like a grid of quadrants
-		//if the image is even x even, then it skips the axis
-		for (int i = start; i <= end; i++) {
-			if (i == 0 && str.size() % 2 == 0) {
-				continue;
-			}
-			if (y == 0 && numLines % 2 == 0) {
-				y--;
-			}	
-			Point temp(i, y, (str[s] - '0'));
-			points.push_back(temp);
-			s++;
-		}
-
-		y--;
-	}
-}
-```
-Takes the values from the image and creates a vector of "Points" and assebles the points like a grid
-
-![image](https://user-images.githubusercontent.com/114605559/203661205-a51b0ca2-5d7d-4be7-bfd3-ddca8f4cd599.png)
-
-
 ### Choose the bottom most point
 
 ```
