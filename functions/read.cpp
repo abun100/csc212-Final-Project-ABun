@@ -1,4 +1,6 @@
 //This function was utilized for reading individual data points off a file as a simpler way to input data while testing functions
+//Data points are taken in the form of x coordinate, y coordinate, and a number designating a data point as the first or second polygon
+//This code reads data points and stores them in two functions representing polygons
 #include <iostream>
 #include <vector>
 #include <fstream>
