@@ -1,1 +1,7 @@
-
+So far...
+- Created the skeleton to forming simplex in GJK
+- created a simple simplex struct
+- choose the first point in simplex
+- choose the second point in simplex
+- uses line case to find next direction (Not FUlly implemented)
+- uses triangle case to find next direction (Not implemented at all)
