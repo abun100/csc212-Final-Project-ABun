@@ -1,0 +1,8 @@
+//Example input of a set of data points that had already been sorted by angle and parsed for the same angle to original position
+0 0
+3 1
+2 3
+1 2
+-1 3
+-1 -1
+-4 1
