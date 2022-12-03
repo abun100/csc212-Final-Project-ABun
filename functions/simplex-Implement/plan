@@ -2,7 +2,19 @@ Steps:
   - have two shapes
   - find center of 2 shapes
   - to create simplex
-  --- use center of first shape and find the furthest point from first shape (pf1)
-  --- next find furthest point in the OPOSITE direction in the second shape (pf2)
+  --- to get direction of first point, find the vector between the two centers of the shapes
+  (i.e d= normalize(s2.center - s1.center))
+  
+  --- find the first point on the simplex
+  --- find the furthest point in the direction found before for the first shape
+  (pf1)
+  
+  --- now do the same with the second shape but in the opposite direction on the second shape 
+  (pf2)
+  
+  --- subtract the 2 points to get the first support point of simplex
+  (pf1 - pf2)
+  
   --- subtract the first point and the second point to get the first support point (which is going to be first point of future triangle or line case)
+  
   --- now get second point (below) also run loop 
