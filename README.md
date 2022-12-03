@@ -75,8 +75,8 @@ swap(points[0], points[min]);
 
 // Sort n-1 points with respect to the first point.
 // A point p1 comes before p2 in sorted output if p2
-// has larger polar angle (in counterclockwise
-// direction) than p1
+// has larger polar angle in counterclockwise
+// direction than p1
 p0 = points[0];
 temp.push_back(points[0]);
 black_points.push_back(points[0]);
