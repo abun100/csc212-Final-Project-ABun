@@ -5,4 +5,4 @@ Steps:
   --- use center of first shape and find the furthest point from first shape (pf1)
   --- next find furthest point in the OPOSITE direction in the second shape (pf2)
   --- subtract the first point and the second point to get the first support point (which is going to be first point of future triangle or line case)
-  --- Now to get the second support point run a (while True:) loop to find the next furthest point while looking towards the origin
+  --- now get second point (below) also run loop 
