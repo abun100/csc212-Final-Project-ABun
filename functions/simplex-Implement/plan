@@ -1,20 +1,32 @@
-Steps:
+Start:
+
   - have two shapes
   - find center of 2 shapes
-  - to create simplex
-  --- to get direction of first point, find the vector between the two centers of the shapes
-  (i.e d= normalize(s2.center - s1.center))
   
-  --- find the first point on the simplex
-  --- find the furthest point in the direction found before for the first shape
+Create simplex:
+
+  - to get direction of first point, find the vector between the two centers of the shapes
+   i.e (d = normalize(s2.center - s1.center))
+  
+  - find the first point on the simplex
+  
+  - find the furthest point in the direction found before for the first shape
   (pf1)
   
-  --- now do the same with the second shape but in the opposite direction on the second shape 
+  - now do the same with the second shape but in the opposite direction on the second shape 
   (pf2)
   
-  --- subtract the 2 points to get the first support point of simplex
-  (pf1 - pf2)
+  - subtract the 2 points to get the first support point of simplex
+  (pf1 - pf2) = A
   
-  --- subtract the first point and the second point to get the first support point (which is going to be first point of future triangle or line case)
+  - to find second support point, the new direction will be facing the origin
   
-  --- now get second point (below) also run loop 
+  - repeat code from lines 12-19 for SECOND support point
+  (although instead of A second point is now B)
+  
+  - KEY NOTE check if second point does not pass the origin from the perspective of A looking at origin
+  
+  - glimpse of main loop
+  // d is direction
+  while True:
+    A = support(pf1, pf2, d0
