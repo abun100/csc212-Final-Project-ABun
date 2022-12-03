@@ -8,7 +8,6 @@ Create simplex:
   - to get direction of first point, find the vector between the two centers of the shapes
    i.e (d = normalize(s2.center - s1.center))
   
-  - find the first point on the simplex
   
   - find the furthest point in the direction found before for the first shape
   (pf1)
@@ -25,10 +24,30 @@ Create simplex:
   (although instead of A second point is now B)
   
   - KEY NOTE check if second point does not pass the origin from the perspective of A looking at origin
+  (if it does not, there is no collisions between the two shapes)
+
+Main function Handle():
+
+  - Include parameters
+  Handle(simplex, d)
   
-  - glimpse of main loop
-```
-  // d is direction
-  while True:
-    A = support(pf1, pf2, d0
-```
+  - Find size of simplex
+  
+  -Use size to determine
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
