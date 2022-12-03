@@ -27,6 +27,8 @@ Create simplex:
   - KEY NOTE check if second point does not pass the origin from the perspective of A looking at origin
   
   - glimpse of main loop
+  ```
   // d is direction
   while True:
     A = support(pf1, pf2, d0
+```
