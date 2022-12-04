@@ -1,80 +1,97 @@
 #include "GJK.h"
 
-//Finds the extreme points for both polygons 
-Point support(direction) {
+Point GJK::negative_direction(Point d)
+{
+	Point temp;
+	temp.x = -d.x;
+	temp.y = -d.y;
+	return temp;
 
-	//find the furthest point for each polygon
-	Point max1 = findFurthest1();
-	Point max2 = findFurthest2();
-
-	//return the vertex on minkoswki difference 
-	return max1 - max2;
 }
 
-//Chooses the next direction for the last point
-//Can choose line case
-//Can choose triangle case
-void handleSimplex(Simplex simplex, std::pair<int, int> direction) {
-	if (simplex.size() == 2) {
-		return lineCase(simplex, direction);
-	}
-	return triangleCase(simplex, direction);
+Point GJK::subtract(Point a, Point b)
+{
+	Point temp;
+	temp.x = a.x - b.x;
+	temp.y = a.y - b.y;
+	return temp;
+}
+
+void GJK::find_centroid()
+{
+	this->center1.x = 0;
+	this->center1.y = 0;
+	this->center2.x = 4;
+	this->center2.y = 4;
 }
 
 
-//Line case, chooses directions based on orgin
-void lineCase(Simplex simplex, std::pair<int, int> direction) {
-	Point A = simplex[0];
-	Point B = simplex[1];
+float GJK::dot(Point& p, Point& d)
+{
+	return ((p.x * d.x) + (p.y * d.y));
+}
 
-	Point AB = B - A;
-	Point A0 = -A;
 
-	//AB and A0 is in the same direction 
-	if () {
-		//take the cross product of the two points and change the direction value 
+Point GJK::find_furthest_point(std::vector<Point>& outer_hull, Point& direction)
+{
+	//Sets the furthest point as the first point in the polygon
+	Point furthest_point = outer_hull[0];
+	float maxDistance = dot(outer_hull[0], direction);
+	float distance;
+
+	//Loops through all the vertices in polygon and finds the furthest point
+	for (auto& curr_vertex : outer_hull) {
+		distance = dot(curr_vertex, direction);
+		if (distance > maxDistance) {
+			maxDistance = distance;
+			furthest_point = curr_vertex;
+		}
 	}
 
+	return furthest_point;
+}
+
+
+bool GJK::gjk()
+{
+	//finds the intital direction based on the centers of the polygons 
+	this->direction = subtract(center2, center1);
+
+	//initial finding furthest point of the first polygon
+	Point pf1 = find_furthest_point(this->poly1, direction);
+
+	//sets the direction in the opposite direction
+
+	direction = negative_direction(this->direction);
+
+	//initial finding furthest point of the second polygon 
+	Point pf2 = find_furthest_point(this->poly2, direction);
+
+	Point A(pf2.x - pf1.x, pf2.y - pf1.y);
+
+	simplex.push_back(A);
+
+	//sets the direction towards the origin
+	Point origin(0, 0);
+
+	this->direction = subtract(origin, simplex[0]);
+
+	//finds second simplex
+	pf1 = find_furthest_point(this->poly1, direction);
+
+	direction = negative_direction(this->direction);
+
+	pf2 = find_furthest_point(this->poly2, direction);
+
+	Point B(pf2.x - pf1.x, pf2.y - pf2.y);
+
+	//seting the direction from the perpective of A to the origin 
+	direction = subtract(origin, A);
+
+	if (dot(B, direction) <= 0) {
+		return false;
+	}
 	else {
-		simplex.clear();
-		simplex.push_back(A);
-		direction = A0;
+		simplex.push_back(B);
 	}
-
-	return false; 
-}
-
-void triangleCase(Simplex simplex, std::pair<int, int> direction) {
-	//Idk how this one works tbh
-}
-
-bool gjk(poly1, poly2) {
-	bool pass;
-	//Picks our first simplex point
-	//We will call this A
-	simplex.push_back(support(direction));
-
-	//Pick the direction towards the origin by subtracting the orgin - first point
-	direction.first = origin.first - simplex[0].first;
-	direction.second = origin.second - simplex[0].second;
-
-	//This while loop will help us choose the following supporting points in the simplex
-	while (pass) {
-		nextSimplexPoint = support(direction);
-		
-		//if the dot prodcut between first point and second point  is < 0, this point will not be choosen
-		if (Dot(nextSimplexPoint, direction) < 0) {
-			pass = false;
-		}
-		//If > 0, then use it as the next point
-		else {
-			simplex.push_back(nextSimplexPoint);
-		}
-		//Inorder to handle the last simplex point in our triangle call this function
-		if (handleSimplex(simplex, direction)) {
-			true; pass = true;
-		}
-		return pass;
-	}
-	return pass;
 }
