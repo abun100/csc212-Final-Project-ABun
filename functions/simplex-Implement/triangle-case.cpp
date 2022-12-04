@@ -6,7 +6,7 @@
 //The cross product function I needed
 Point GJK::cross(Point a, Point b)
 {
-    return {{a.x * b.x},{a.y * b.y}};
+    return {{a.x * b.y},{b.x * a.y}};
 }
 
 //The rough skeleton for a triangle case. I switched the function type to bool though it originated as void.
