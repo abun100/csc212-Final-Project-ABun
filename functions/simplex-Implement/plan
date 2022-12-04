@@ -16,17 +16,16 @@ Create simplex:
   (pf2)
   
   - subtract the 2 points to get the first support point of simplex
-  (pf1 - pf2) = A
+  (pf1 - pf2) = C
   
   - to find second support point, the new direction will be facing the origin
   
   - repeat code from lines 12-19 for SECOND support point
-  (although instead of A second point is now B)
+  (although instead of C second point is now B)
   
   - KEY NOTE check if second point does not pass the origin from the perspective of A looking at origin
   (if it does not, there is no collisions between the two shapes)
 
-!!!important!!! - make sure that the order of the points remain the same no matter what when the third point is found, meaning C will always be the most recent point on the simplex found followed by B and A
 
 Main function Handle():
 
@@ -40,16 +39,16 @@ Main function Handle():
   triangleCase(simplex, d)
   
   - lineCase: The purpose is to find the next direction for the third point in the simplex. to implement the lineCase we will first find the vector for line BA by simply doing (A-B), then follow that up with another line vector between B and the Origin (BO) through O-B.
-  (A-B) = vector BA
+  (C-B) = vector BC
   (O-B) = vector BO
   
-  --- Now to find the new direction we will take the CROSS PRODUCT of the two vectors, followed up by another CROSS PRODUCT in regards to BA pointing towards the origin, otherwise known as vector triple product.
-  (BA x BO)
-  (BA x BO) x BA = d
+  --- Now to find the new direction we will take the CROSS PRODUCT of the two vectors, followed up by another CROSS PRODUCT in regards to BC pointing towards the origin, otherwise known as vector triple product.
+  (BC x BO)
+  (BC x BO) x BC = d
   
   --- Use new direction and plug into lines 12-19 for the last point C
   
-  --- Return false for lineCase ALTHOUGH take into account edge case where the origin lies on the edge of BA
+  --- Return false for lineCase ALTHOUGH take into account edge case where the origin lies on the edge of BC
   
   - triangleCase: with the now found 3 points, A,B,C; we will take each and find the line vectors
   
