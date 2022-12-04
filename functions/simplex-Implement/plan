@@ -26,14 +26,58 @@ Create simplex:
   - KEY NOTE check if second point does not pass the origin from the perspective of A looking at origin
   (if it does not, there is no collisions between the two shapes)
 
+!!!important!!! - make sure that the order of the points remain the same no matter what when the third point is found, meaning C will always be the most recent point on the simplex found followed by B and A
+
 Main function Handle():
 
   - Include parameters
   Handle(simplex, d)
   
-  - Find size of simplex
+  - Find size of simplex, and if the size is equal to 2 then run the lineCase function
+  lineCase(simplex, d)
   
-  -Use size to determine
+  -then run triangleCase
+  triangleCase(simplex, d)
+  
+  - lineCase: The purpose is to find the next direction for the third point in the simplex. to implement the lineCase we will first find the vector for line BA by simply doing (A-B), then follow that up with another line vector between B and the Origin (BO) through O-B.
+  (A-B) = vector BA
+  (O-B) = vector BO
+  
+  --- Now to find the new direction we will take the CROSS PRODUCT of the two vectors, followed up by another CROSS PRODUCT in regards to BA pointing towards the origin, otherwise known as vector triple product.
+  (BA x BO)
+  (BA x BO) x BA = d
+  
+  --- Use new direction and plug into lines 12-19 for the last point C
+  
+  --- Return false for lineCase ALTHOUGH take into account edge case where the origin lies on the edge of BA
+  
+  - triangleCase: with the now found 3 points, A,B,C; we will take each and find the line vectors
+  
+  CB = B-C
+  CA = A-C
+  CO = origin-C
+  
+  --- find CB and CA perpendiculars with the triple product (x is cross product)
+  CBperp = (CA x CB) x CB
+  CAperp = (CB x CA) x CA
+  
+  --- First, we will check if the origin is in the region rCB, (dot(CBperp, CO) > 0:), If the origin is not in there we will REMOVE A from the simplex vector and use the vector CB as the new direction to find another third point
+  if dot(CBperp, CO) > 0:
+    simplex.remove(A);
+    d.set(CBperp);
+    return False
+    
+  --- if the last test passes we will now test CA to see if origin is  region rCA, (dot(CAperp, CO) > 0:), if the origin is not there then we will REMOVE A from the simplex vecter and use vector CAperp as a new direction
+  if dot(CAperp, CO) > 0:
+    simplex.remove(B);
+    d.set(CAperp);
+    return False
+    
+   - if the simplex triangle passes both if cases then it is safe to say that there is a collision and we will return true
+   
+   
+  
+  
   
   
   
