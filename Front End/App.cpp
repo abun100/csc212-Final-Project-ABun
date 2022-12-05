@@ -1,15 +1,104 @@
 #include "App.h"
 
+
 /*
 	Class to launch and render the application
 */
+
+//shape.getTransform().transformPoint(shape.getPoint(0)); (Helpful)
 
 //Updates the window
 void App::update()
 {
 	this->pollEvents();
 
+	//Window Bounds Collision
+
+	//Keyboard movement
+	keyboard_input();
+
+	//update cordinates for each polygon
+	
+	//test transform points
+	update_minkowski_position();
 }
+
+void App::update_minkowski_position() {
+	
+	sf::Vector2f cordinates1;
+	sf::Vector2f cordinates2;
+	std::vector<Point> temp_poly;
+	std::vector<Point> temp_poly2;
+	Point temp;
+	Point temp2;
+
+	//Loops through the polygon's verticies and updates the position of each vertex
+	//based on where it's location is on screen
+	for (int i = 0; i < polygon1.getPointCount(); ++i) {
+		cordinates1 = polygon1.getTransform().transformPoint(polygon1.getPoint(i));
+		temp.x = cordinates1.x;
+		temp.y = cordinates1.y;
+		temp_poly.push_back(temp);
+	}	
+
+	//Loops through the polygon's verticies and updates the position of each vertex
+	//based on where it's location is on screen
+	for (int i = 0; i < polygon2.getPointCount(); ++i) {
+		cordinates2 = polygon2.getTransform().transformPoint(polygon2.getPoint(i));
+		temp2.x = cordinates2.x;
+		temp2.y = cordinates2.y;
+		temp_poly2.push_back(temp2);
+	}
+
+	//Finds our minkowski sum relative to the positions of each polygon
+	minkowski sum;
+	sum.find_minkowski(temp_poly, temp_poly2);
+	minkowski_sum = sum.get_minkowski_sum();
+	initMinkowski();
+
+	//GJK collision detector
+	GJK collide;
+	
+	float width1 = polygon1.getTransform().transformPoint(polygon1.getOrigin()).x;
+	float height1 = polygon1.getTransform().transformPoint(polygon1.getOrigin()).y;
+	float width2= polygon2.getTransform().transformPoint(polygon2.getOrigin()).x;
+	float height2 = polygon2.getTransform().transformPoint(polygon2.getOrigin()).y;
+	
+	collide.find_centroid(height1, width1, height2, width2);
+	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
+		if (collide.gjk(temp_poly, temp_poly2)) {
+			std::cout << "true" << std::endl;
+		}
+		else {
+			std::cout << "false";
+		}
+	}
+
+	//std::cout << width1 << " " << height1 << std::endl;
+}
+
+void App::keyboard_input() {
+	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		this->polygon1.move(-this->movement_speed, 0.f);
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		this->polygon1.move(this->movement_speed, 0.f);
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		this->polygon1.move(0.f, -this->movement_speed);
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		this->polygon1.move(0.f, this->movement_speed);
+	}
+	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		this->polygon1.rotate(0.5);
+	}
+}
+
 
 //Renders the convex shapes the front end app
 void App::render()
@@ -17,8 +106,14 @@ void App::render()
 	//Reders the Applications 
 	this->window->clear();
 
+
+	//render grid background 
+	this->window->draw(this->background);
+
 	//Draw Shapes
-	this->window->draw(this->convex1);
+	this->window->draw(polygon1);
+	this->window->draw(polygon2);
+	this->window->draw(minkowski_diff);
 
 	this->window->display();
 }
@@ -47,11 +142,17 @@ void App::pollEvents()
 }
 
 //Defualt Constructor : Initiates front end app
-App::App()
+App::App(std::vector<Point> poly1, std::vector<Point> poly2)
 {
+	this->convex_hull = poly1;
+	this->convex_hull2 = poly2;
+	
 	this->initiateVariables();
 	this->initiateWindow();
+	this->initGrid();
+	this->initShape();
 }
+
 
 //Destructor : delets the window from memory 
 App::~App()
@@ -63,133 +164,70 @@ App::~App()
 void App::initiateVariables()
 {
 	this->window = nullptr;
+	this->movement_speed = 2.f;
 }
 
 //Initiates the size of the window and renders the window
 void App::initiateWindow()
 {
 	//size of the window application
-	this->videomode.height = 800;
+	this->videomode.height = 1000;
 	this->videomode.width = 1000;
 	this->window = new sf::RenderWindow (this->videomode, "Collision Detection", sf::Style::Titlebar | sf::Style::Close); //initialize window
 	
 
-	this->window->setFramerateLimit(165);
+	this->window->setFramerateLimit(60);
 
 }
 
-//Initiates Convex Shapes 
-void App::initShapes()
+void App::initGrid()
 {
-	
-	float height = videomode.height;
-	float width = videomode.width;
+	this->grid.loadFromFile("grid.png");
+	this->background.setTexture(this->grid);
+}
 
-	this->convex1.setPosition(height / 2, width / 2);
-	this->convex1.setFillColor(sf::Color::Black);
-	this->convex1.setOutlineColor(sf::Color::Cyan);
-	this->convex1.setOutlineThickness(1.f);
+void App::initShape() {
 	
-	//set the amount of points in respects to the convex hull
-	this->convex1.setPointCount(this->convex_hull.size());
+	this->polygon1.setFillColor(sf::Color(255, 255, 255, 0));
+	this->polygon1.setOutlineColor(sf::Color::Cyan);
+	this->polygon1.setOutlineThickness(1.f);
 
-	int num_points = 0;
+	this->polygon2.setFillColor(sf::Color(255, 255, 255, 0));
+	this->polygon2.setOutlineColor(sf::Color::Green);
+	this->polygon2.setOutlineThickness(1.f);
 	
-	//Adds the cordinates to our convex shape
-	while (!convex_hull.empty()) 
-	{
-		this->convex1.setPoint(num_points, sf::Vector2f(convex_hull.top().y, convex_hull.top().x));
-		convex_hull.pop();
-		num_points++;
+	this->minkowski_diff.setFillColor(sf::Color(255, 255, 255, 0));
+	this->minkowski_diff.setOutlineColor(sf::Color::Red);
+	this->minkowski_diff.setOutlineThickness(1.f);
+
+	this->polygon1.setPointCount(convex_hull.size());
+	this->polygon2.setPointCount(convex_hull2.size());
+	
+	this->polygon1.setPosition(650,250);
+	this->polygon2.setPosition(750,250);
+	this->minkowski_diff.setPosition(500,500);
+
+
+	add_points_to_shape(convex_hull, polygon1);
+	add_points_to_shape(convex_hull2, polygon2);
+	
+	polygon1.setOrigin(sf::Vector2f(polygon1.getGlobalBounds().width / 2, polygon1.getGlobalBounds().height / 2));
+	polygon2.setOrigin(sf::Vector2f(polygon2.getGlobalBounds().width / 2, polygon1.getGlobalBounds().height / 2));
+}
+
+void App::initMinkowski()
+{
+	this->minkowski_diff.setPointCount(minkowski_sum.size());
+	add_points_to_shape(minkowski_sum, minkowski_diff);
+}
+
+void App::add_points_to_shape(std::vector<Point>& outer_hull, sf::ConvexShape& polygon)
+{
+	 
+	int numPoints = 0;
+	while (!outer_hull.empty()) {
+		polygon.setPoint(numPoints, sf::Vector2f(outer_hull.back().x, outer_hull.back().y));
+		numPoints++;
+		outer_hull.pop_back();
 	}
-
-}
-
-void App::initGrahamScan()
-{
-	//Reads from file and initiates the graham scan to find convex hull
-	GrahamScan scan;
-	int numberOfLines = scan.getNumOfLines(this->file_name);
-	scan.ReadFile(this->file_name, this->p, numberOfLines);
-	this->convex_hull = scan.convexHull(this->p);
-
-	//Creates the convex hull shape
-	this->initShapes();
-}
-
-void App::setFileName(std::string file_name)
-{
-	this->file_name = file_name;
-}
-
-//GJK Algorithm and Minkowski Difference
-//**************************************
-
-void App::calc_minkowski_diff()
-{
-	/*
-		TODO :
-		find the vectors from each vertex in A to each vertex in B
-		Use Graham Scan to find the convex hull
-		See if orgin is in minkowski difference
-		condition (TRUE) : shapes intersect
-		condition (FALSE) : shapes do not intersect
-	*/
-}
-
-void App::calc_gjk()
-{
-	/*
-		TODO : 
-		find support points
-		find the direction of the orgin
-		choose next support points
-		find next direction
-
-		form simplex (Triangle) inside of the minkowski difference
-		check to see if orgin is inside simplex
-			- condition (TRUE) : shapes intersect
-			- condition (FALSE) : shapes do not intersect
-
-		draw the Minkowski difference and the simplex as well in the center of the front end app
-	*/
-}
-
-
-//Utility Functions for GJK and Minkowski Difference
-//**************************************************
-
-bool App::origin_in_simplex()
-{
-	/* Check to see if origin is inside mikowski difference or simplex */
-
-	return false;
-}
-
-void App::find_support_points()
-{
-	/*Find 3 supporting points to form the simplex */
-}
-void App::choose_direction()
-{
-	/* AFter picking the first supporting point, choose a direction relative to the origin position
-	*/
-}
-
-void App::form_simplex()
-{
-	//Create the triangle object inside the minkowski difference
-	//draw the triangle to the front end
-}
-
-void App::shape_subtract()
-{
-	//Subtract vertices from each shape and use vectors to form the convex hull of minkowski difference
-}
-
-void App::check_origin_position() 
-{
-	/* When choosing the 2nd or 3rd support point for our simplex, 
-	we need to check the relative direction of the orgin 
-	to choose next supporting point*/
 }

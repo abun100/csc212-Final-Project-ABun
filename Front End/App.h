@@ -1,6 +1,9 @@
 #pragma once
+#include <iostream>
 
-#include "GrahamScan.h"
+#include "ScanImage.h"
+#include "minkowski.h"
+#include "GJK.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -16,24 +19,33 @@ private:
 	sf::VideoMode videomode;
 	sf::Event ev;
 
-	//Graham Scan needed fields
-	std::string file_name;
-	std::vector<Point> p;
-	std::stack<Point> convex_hull;
-
 
 	//Initialize our window and its properties
 	void initiateVariables();
 	void initiateWindow();
-	void initShapes();
+	void initGrid();
+	void initShape();
+	void initMinkowski();
 
 	//Convex Objects
-	sf::ConvexShape convex1;
-	sf::ConvexShape convex2;
+	
+	sf::ConvexShape polygon1;
+	sf::ConvexShape polygon2;
 	sf::ConvexShape minkowski_diff;
+	float movement_speed;
+
+	//Graham Scan needed fields
+	std::vector<Point> convex_hull;
+	std::vector<Point> convex_hull2;
+	std::vector<Point> minkowski_sum;
+
+	//Variables for app
+	sf::Texture grid;
+	sf::Sprite background;
 
 public:
 	//Constructor and Destructor
+	App(std::vector<Point> poly1, std::vector<Point> poly2);
 	App();
 	~App();
 
@@ -44,21 +56,11 @@ public:
 	void pollEvents();
 	void update();
 	void render();
-	void setFileName(std::string file_name);
 	
-	//Graham Scan Functions 
-	void initGrahamScan();
+	//Shape update
+	void keyboard_input();
+	void add_points_to_shape(std::vector<Point>& outer_hull, sf::ConvexShape& polygon);
+	void update_minkowski_position();
 
-	//TODO
-	void calc_minkowski_diff();
-	void calc_gjk();
-
-	//Utility TODO's
-	bool origin_in_simplex();
-	void find_support_points();
-	void check_origin_position();
-	void choose_direction();
-	void form_simplex();
-	void shape_subtract();
 };
 
