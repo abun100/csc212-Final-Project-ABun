@@ -17,6 +17,10 @@ GJK.cpp, GJK.h
 main.cpp
 
 All code for the files will be uploaded in the folder call "FinalProduct"
+
+Dot File is under 
+
+NONFINAL PRODUCT : The "Front End" Folder and "Function" Folder are previous work folder
 ```
 ### Instructions for the initial setup for sfml
 
