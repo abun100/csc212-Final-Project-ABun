@@ -18,7 +18,7 @@ main.cpp
 
 All code for the files will be uploaded in the folder call "FinalProduct"
 
-Dot File is under 
+Dot File is under "dot" folder
 
 NONFINAL PRODUCT : The "Front End" Folder and "Function" Folder are previous work folder
 ```
