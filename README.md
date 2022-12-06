@@ -50,8 +50,33 @@ sfml-window-d.lib
 sfml-audio-d.lib
 sfml-network-d.lib
 ```
+## Before you run
 
-Once you have all the source code files copied into the project, you can hit the green run button in visual studios. (Or hit ctrl + f5)
+Our application takes in two binary images represented in a text file format. Here is a useful link to convert any image into a binary image. https://www.dcode.fr/binary-image
+
+You will need to create a two text files and copy the image text values from the website and paste them in text files. However, two text files will be provided in our github repo. `shilouette1.txt` and `shilouette2.txt` . Place the text files into a folder where you can access them.
+
+## Command line
+```
+&.\Directory file_name.txt file_name2.txt
+```
+Once you have all the source code files copied into the project, inputed the command line in visual studios, you can hit the green run button in visual studios. (Or hit ctrl + f5)
+
+## Inside the application
+Once you run the application, a new windown will pop up it should look this. 
+
+![image](https://user-images.githubusercontent.com/114605559/205797463-a8530de0-f5ca-4ac5-ba83-2afd04c59159.png)
+
+The red polygon in the middle represents the minkowski difference
+
+The blue and green polygon are the outline (convex hull) from the images include in the project
+
+### Controls
+W, S, A, D : controls to move up, down, left, right
+
+space bar : to rotate the shape
+
+G : test collisions 
 
 ## What each part in the convex hull function does
 
