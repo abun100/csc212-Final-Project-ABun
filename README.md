@@ -18,6 +18,7 @@ main.cpp
 
 All code for the files will be uploaded in the folder call "FinalProduct"
 ```
+### Instructions for the initial setup for sfml
 
 In order to run the code, visual studios and sfml is needed. To recreate our project repo in visual studios, you will need to download the sfml external folder. Here is the link to the sfml downlaod folder https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-64-bit.zip . 
 
