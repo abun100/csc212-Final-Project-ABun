@@ -19,8 +19,38 @@ main.cpp
 All code for the files will be uploaded in the folder call "FinalProduct"
 ```
 
-In order to run the code, visual studios is needed. In order to recreate The name of the repo folder is call "termproject". In the folder it will include the standard files that come with visual studios such as the solution file and the resources for the code
+In order to run the code, visual studios and sfml is needed. To recreate our project repo in visual studios, you will need to download the sfml external folder. Here is the link to the sfml downlaod folder https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-64-bit.zip . 
 
+It will be downloaded in a zip file and you must extract the files within the zip. Once this is done, you must create an additionaly folder called external. From the sfml file, copy the folders called "include" and "lib" and paste them into the external folder. 
+
+The next step is to create a new c++ project and copy all the source code from the "FinalProduct" folder in our github repo. You will also need to place the external folder into the c++ project repo. 
+
+Go into the Project Properties, find C/C++ and go under general, click on "Additional Include Directories" and click edit
+
+![image](https://user-images.githubusercontent.com/114605559/205793804-b826c28e-b5fa-4ab3-99e9-f8803e560989.png)
+
+Paste this into the first box `$(SolutionDir)\External\include`
+
+You will need to do the same process under the Linker tab under general. 
+
+![image](https://user-images.githubusercontent.com/114605559/205794184-7b39872e-7bfe-4614-bacf-4d411caa823d.png)
+
+Paste this `$(SolutionDir)\External\lib`
+
+Go under Linker tab, then input
+
+![image](https://user-images.githubusercontent.com/114605559/205794433-a8f55c60-f7ca-4bb6-bd6c-f6d621704f6a.png)
+
+Paste these into the additional dependecies 
+```
+sfml-system-d.lib
+sfml-graphics-d.lib
+sfml-window-d.lib
+sfml-audio-d.lib
+sfml-network-d.lib
+```
+
+Once you have all the source code files copied into the project, you can hit the green run button in visual studios. (Or hit ctrl + f5)
 
 ## What each part in the convex hull function does
 
