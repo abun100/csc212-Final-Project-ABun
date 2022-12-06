@@ -1,40 +1,25 @@
 # csc212-Final-Project-ABun
-## Convex hull initial plan
+## Convex hull Project
 ```
-We could use color picker concept to map out convex hull
-make a simpler map given a real life google maps
-Select the borders of main features in a map (ex. house, streets, highways)
-ignore noise in pictures (random objects, like cars, people, and envirnment)
+IMPORTANT 
+
+Our source code is implemented with sfml. 
+The Project files include :
+
+App.cpp, App.h 
+
+ScanImage.cpp, ScanImage.h
+
+Minkowski.cpp, Minkowski.h 
+
+GJK.cpp, GJK.h
+
+main.cpp
+
+All code for the files will be uploaded in the folder call "FinalProduct"
 ```
 
-## Psuedocode
-
-- Given an image convert each pixel image into there rgb value
-
-&emsp; While we are not at the end of the img pixels 
-
-&emsp; if(pixel is this color) : convert pixel to that rgb value 
-
-- We pick a random pixel in the image
-
-- Based on that pixel’s image color, we used the graham scan to find surrounding similar pixels
-
-&emsp; Use graham scan to find the outline of shape we’re choosing
-
-&emsp; Has to have pixels connect from the chosen pixel to the outer border
-
-&emsp; Push those pixels into a vector
-
-- Return the convex hull 
-
-&emsp; Return the set of pixels in there original positions and only include that area
-
-- Convert the convex hull back to a picture
-
-- Copy picture to clipboard
-
-- Paste picture into external software (ex. paint)
-
+In order to run the code, visual studios is needed. In order to recreate The name of the repo folder is call "termproject". In the folder it will include the standard files that come with visual studios such as the solution file and the resources for the code
 
 
 ## What each part in the convex hull function does
